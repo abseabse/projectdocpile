@@ -1,9 +1,0 @@
-{
-    "undef": true,
-    "trailing": true,
-    "curly": true,
-    "strict": false,
-    "browser": true,
-    "jquery": true,
-    "esversion": 8   
-}
