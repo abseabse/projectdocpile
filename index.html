@@ -1,32 +1,63 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-* {
-	box-sizing: border-box;
-}
-
-.list_task_docs {
-	width: 50%;
-	float: left;
-	padding: 15px;
-}
-</style>	
+		<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>projectdocpile</title>
+		<link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" type= "image/png" href="favicon.ico">
+		<script type="module">
+			import * as controller from "./controller.js";
+			window.updateTasks = controller.updateTasks;
+      window.addTask = controller.addTask;
+      window.addDoc = controller.addDoc;
+      window.modifyTask = controller.modifyTask;
+      window.deleteTask = controller.deleteTask;
+      window.modifyDoc = controller.modifyDoc;
+      window.deleteDoc = controller.deleteDoc;
+      window.onload = controller.mainLoad;
+		</script>
 	</head>
 	<body>
-		<div class="list_task_docs">
-			<ul>
-				<li>First task</li>
-				<li>Second task</li>
+		<div class="list_task_docs" id='tasks'>
+			<ul id='tasks_list'>
+				<li id='1' class='task'>First task</li>
+				<li id='2' class='task'>Second task</li>
+			</ul>
+			<button name="updateTasks" onclick="updateTasks()">update tasks</button>
+			<button name="addTask" onclick="addTask()">add a task</button>
+			<button name="addDoc" onclick="addDoc()">add a doc</button>
+      <button name="deleteDoc" onclick="deleteDoc()">delete doc</button>
+		</div>
+		<div class="list_task_docs" id='docs'>
+			<ul id='docs_list'>
+				<li id='1' class='doc' href='https://google.com'>First doc</li>
+				<li id='2' class='doc' href='goga.txt'>Second doc</li>
 			</ul>
 		</div>
-		<div class="list_task_docs">
-			<ul>
-				<li>First doc</li>
-				<li>Second doc</li>
-			</ul>
+		<div id='task_window' class='modal'>
+			<div class='modal_content'>
+				<span class='close'>&times;</span>
+				<form onsubmit="modifyTask(this)">
+					<p><b>Редактирование задачи</b></p>
+					<p><input type="text" name="task_name" id="modal_task_name" value="Наименование задачи">Наименование</p>
+					<p><input type="nubmer" name="task_id" id="modal_task_id" readonly>Код</p>
+					<p><input type="submit"></p>
+					<p><button onclick="return deleteTask(document.getElementById('modal_task_id').value)">Удалить задачу</button></p>
+
+				</form>
+			</div>
 		</div>
-	<script src="script.js"></script>
+		<div id='doc_window' class='modal'>
+			<div class='modal_content'>
+				<span class='close'>&times;</span>
+				<form onsubmit="modifyDoc(this)">
+					<p><b>Редактирование документа</b></p>
+					<p><input type="text" name="doc_name" id="modal_doc_name" value="Наименование документа">Наименование</p>
+					<p><input type="number" name="doc_id" id="modal_doc_id" readonly>Код</p>
+					<p><input type="text" name="doc_link" id="modal_doc_link">Ссылка</p>
+					<p><input type="submit"></p>
+				</form>
+			</div>
+		</div>
 	</body>
 </html>

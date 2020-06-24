@@ -1,0 +1,81 @@
+describe("Tests of module model.js", function() {
+  // path to databaseName is given from the scope of get_task_list.py
+  let databaseName = "../test_database/test_database.db";
+  // path to databaseNameForController is given from the scope of
+  // test_database_controller.py
+  let databaseNameForController = "../../test_database/test_database.db";
+  let expectedTaskList = [
+              {'task_id': 1, 
+               'task_name': 'vopya', 
+               'task_status': 1, 
+               'task_parent': 0}, 
+              {'task_id': 2, 
+               'task_name': 'tupya', 
+               'task_status': 1, 
+               'task_parent': 0} 
+                           ];
+  beforeEach(async function() {
+    let response = await fetch(
+      'http://localhost/projectdocpile/Jasmine/src/test_database_controller.py', 
+      {method: 'POST', body: JSON.stringify({
+        userAction: 'create_test_base', 
+        databaseName: databaseNameForController})}
+    );    
+    if (response.ok) {
+      // pass
+    } else {
+      alert("HTTP-Error: " + response.status);
+    }
+  });
+  afterEach(async function() {
+    let response = await fetch(
+      'http://localhost/projectdocpile/Jasmine/src/test_database_controller.py', 
+      {method: 'POST', body: JSON.stringify({
+        userAction: 'nuke_test_base', 
+        databaseName: databaseNameForController})}
+    );    
+    if (response.ok) {
+      // pass
+    } else {
+      alert("HTTP-Error: " + response.status);
+    }
+  });
+  it("Test for the getTaskList() with a database name given as an argument", 
+      async function() {
+        let taskList = await getTaskList(databaseName);
+        expect(taskList).toEqual(expectedTaskList);
+  });
+  it("Test for the getTaskList() without a database name as an argument",
+      async function() {
+        let taskList = await getTaskList();
+        expect(taskList).not.toEqual(expectedTaskList);
+  });
+  it("Test for getDocList() with a database name given as as argument",
+    async function() {
+      let docList = await getDocList(taskId=1, databaseName=databaseName);
+      expect(docList).toEqual([{'doc_id': 2, 'doc_name': 'tupya.xls'}])
+    }
+  );
+  it("Test for getDocList() without a database name as an argument",
+    async function() {
+      let docList = await getDocList();
+      expect(docList).not.toEqual([{'doc_id': 2, 'doc_name': 'tupya.xls'}]);
+    }
+  );
+  it('Test for addTask()',
+    async function() {
+      let tasksBefore = await getTaskList(databaseName);
+      let addedTaskId = await addTask(databaseName);
+      let tasksAfter = await getTaskList(databaseName);
+      expect(tasksBefore).not.toEqual(tasksAfter);
+  });
+  it('Test for addDoc()',
+    async function() {
+      let taskId = undefined;
+      let docsBefore = await getDocList(taskId, databaseName);
+      let addedDoc = await addDoc(taskId, databaseName=databaseName);
+      let docsAfter = await getDocList(taskId, databaseName);
+      console.log(docsBefore);
+      expect(docsBefore).not.toEqual(docsAfter);
+  });
+});
