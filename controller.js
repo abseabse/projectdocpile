@@ -20,13 +20,12 @@ export async function addTask() {
   presenter.addTask(taskAdded, getDocList);
 }
 
-export async function modifyTask(taskId, taskProperties) {
-  /*
-  FIXME remove this shit
-  let taskModified = await model.modifyTask(taskId, taskProperties);
-  console.log(taskModified);
+export async function modifyTask(task) {
+  let taskId = task.modal_task_id.value;
+  let taskProperties = new Object;
+  taskProperties.task_name = await task.modal_task_name.value;
+  await model.modifyTask(taskId, taskProperties);
   presenter.modifyTask(taskId, taskProperties);
-  */
 }
 
 export function deleteTask(taskId) {
@@ -54,7 +53,6 @@ export async function modifyDoc(docId, docProperties) {
   presenter.modifyDoc(docId, docProperties);
 }
 
-// TODO write the function
 export async function deleteDoc() {
   let SelectedDocId = await presenter.getDocSelected();
   if (SelectedDocId) {

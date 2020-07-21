@@ -83,3 +83,25 @@ export async function deleteDoc(docId, databaseName=undefined) {
   }
 }
 
+export async function modifyTask(taskId, taskProperties, 
+                                 databaseName=undefined) {
+  let my_info = await JSON.stringify({userAction: 'modify task', 
+                            taskId: taskId,
+                            taskProperties: taskProperties,
+                            databaseName: databaseName});
+  console.log(my_info);
+  let response = await fetch(
+    'http://localhost/projectdocpile/cgi-bin/update_task.py', {
+      method: 'POST',
+      body: JSON.stringify({userAction: 'modify task', 
+                            taskId: taskId,
+                            taskProperties: taskProperties,
+                            databaseName: databaseName})
+      });
+  if (response.ok) {
+      // pass
+  } else {
+    alert("Ошибка HTTP: " + response.status);
+  }
+}
+

@@ -94,7 +94,6 @@ export function updateDocs(docs) {
   }
   // add actual docs
   for (let item of docs) {
-    console.log(item)
     let node = document.createElement('li');
     node.id = item.doc_id;
     node.classList.add("doc");

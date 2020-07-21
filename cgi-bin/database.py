@@ -144,24 +144,24 @@ def delete_task(task_id, database_name=database_name):
     conn.commit()
     conn.close()
 
-def update_task(task_ID, task_update, database_name=database_name):
+def update_task(task_id, task_info, database_name=database_name):
     # Updates an existing task. task_update should be a tuple
     # in this form: (new_task_name, new_task_status, new_parent_task)
     conn = sqlite3.connect(database_name)
     c = conn.cursor()
     c.execute('''pragma foreign_keys = on''')
-    if 'task_name' in task_update:
+    if 'task_name' in task_info:
         c.execute('''UPDATE Tasks SET Task = ? 
                      WHERE Task_ID = ?''', 
-                     (task_update['task_name'], task_ID))
-    if 'task_status' in task_update:
+                     (task_info['task_name'], task_id))
+    if 'task_status' in task_info:
         c.execute('''UPDATE Tasks SET Task_status = ? 
                      WHERE Task_ID = ?''',
-                     (task_update['task_status'], task_ID))
-    if 'task_parent' in task_update:
+                     (task_info['task_status'], task_id))
+    if 'task_parent' in task_info:
         c.execute('''UPDATE Tasks SET Parent_task = ? 
                      WHERE Task_ID = ?''',
-                     (task_update['task_parent'], task_ID))
+                     (task_info['task_parent'], task_id))
     conn.commit()
     conn.close()
 
