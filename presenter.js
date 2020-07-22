@@ -17,7 +17,7 @@ export function mainLoad() {
   };
 }
 
-export async function updateTasks(newTaskList, getDocList) {
+export async function updateTasks(newTaskList, getDocList, getTaskInfo) {
   let taskList = await document.getElementById('tasks_list');
   // removes old tasks
   while (taskList.firstChild) {
@@ -36,14 +36,14 @@ export async function updateTasks(newTaskList, getDocList) {
     let text = await document.createTextNode(item.task_name);
     await node.appendChild(text);
     await taskList.appendChild(node);
-    addEventsToTask(node, getDocList);
+    addEventsToTask(node, getDocList, getTaskInfo);
   }
   // adds actual docs
   let docList = await getDocList();
   updateDocs(docList);
 }
 
-export async function addEventsToTask(task, getDocList) {
+export async function addEventsToTask(task, getDocList, getTaskInfo) {
   // adds selection to task
   task.onclick = async function() {
     await task.classList.toggle('selected');
@@ -53,7 +53,7 @@ export async function addEventsToTask(task, getDocList) {
         newTask.classList.remove('selected');
       }
     }
-  // updates doc list
+    // updates doc list
     if (task.classList.contains('selected')) {
       let docList = await getDocList(task.id);
       updateDocs(docList);
@@ -65,12 +65,18 @@ export async function addEventsToTask(task, getDocList) {
     }
   };
   // opens task properties in a modal window
-  task.ondblclick = function(event) {
+  task.ondblclick = async function(event) {
+    let taskId = event.target.id;
+    let taskInfo = JSON.parse(await getTaskInfo(taskId));
     document.getElementById('modal_task_name').value = event.target.innerHTML;
     document.getElementById('modal_task_id').value = event.target.id;
+    document.getElementById('modal_parent_task_name').value = taskInfo.parentTaskName;
+    document.getElementById('modal_parent_task_id').value = taskInfo.parentTaskId;
     let modal = document.getElementById('task_window');
     modal.style.display = "block";
   };
+  // TODO write new version of the function here
+
 }
 
 export async function addEventsToDoc(doc) {

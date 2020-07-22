@@ -75,7 +75,6 @@ export async function deleteDoc(docId, databaseName=undefined) {
                             docId: docId,
                             databaseName: databaseName})
       });
-  
   if (response.ok) {
       // pass
   } else {
@@ -97,7 +96,7 @@ export async function modifyTask(taskId, taskProperties,
                             taskId: taskId,
                             taskProperties: taskProperties,
                             databaseName: databaseName})
-      });
+    });
   if (response.ok) {
       // pass
   } else {
@@ -105,3 +104,23 @@ export async function modifyTask(taskId, taskProperties,
   }
 }
 
+export async function getTaskInfo(taskId, databaseName=undefined) {
+  let response = await fetch(
+    'http://localhost/projectdocpile/cgi-bin/update_task.py', {
+      method: 'POST',
+      body: JSON.stringify({userAction: 'get task info',
+                            taskId: taskId,
+                            databaseName: databaseName})
+    });
+  if (response.ok) {
+    let taskInfo = await response.json();
+    let taskName = taskInfo.taskName;
+    let parentTaskId = taskInfo.parentTaskId;
+    let parentTaskName = taskInfo.parentTaskName;
+    return JSON.stringify({taskName: taskName, 
+                           parentTaskId: parentTaskId, 
+                           parentTaskName: parentTaskName})
+  } else {
+    alert("Ошибка HTTP: " + response.status);
+  }
+}

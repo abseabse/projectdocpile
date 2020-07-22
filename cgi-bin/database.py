@@ -1,11 +1,10 @@
 #!"C:\Users\VSPan\AppData\Local\Programs\Python\Python37\python.exe"
 # Module to manipulate database
-# Version: 6
-# Date: 18.06.20
-# Time: 22:40 GMT+5
+
 
 # IMPORTS
 import sqlite3
+
 
 # OPTIONS
 database_name= 'database.db'
@@ -270,3 +269,27 @@ def get_docs_tuple(database_name=database_name, task=None):
         list_of_docs.append(item_to_add)
     tuple_of_docs = tuple(list_of_docs)
     return tuple_of_docs
+
+def get_task_info(task_id, database_name=database_name):
+    # returns list of task properties. 
+    # Output example: 
+    # {"taskId": 44, "taskName": "new task", 
+    #  "parentTaskId": 8, "parentTaskName": "newtask12345"}
+    # TODO write the tests - see task 49
+    conn = sqlite3.connect(database_name)
+    c = conn.cursor()
+    c.execute('''SELECT Tasks.Task_ID, 
+                        Tasks.Task, 
+                        Tasks.Parent_task, 
+                        Parent_tasks.Task 
+                 FROM Tasks LEFT JOIN Tasks AS Parent_tasks 
+                 ON Tasks.Parent_task = Parent_tasks.Task_ID 
+                 WHERE Tasks.Task_ID = ?''', (task_id,))
+    raw_task_info = c.fetchone()
+    conn.close()
+    dictionary_task_info = {}
+    dictionary_task_info["taskId"] = raw_task_info[0]
+    dictionary_task_info["taskName"] = raw_task_info[1]
+    dictionary_task_info["parentTaskId"] = raw_task_info[2]
+    dictionary_task_info["parentTaskName"] = raw_task_info[3]
+    return dictionary_task_info

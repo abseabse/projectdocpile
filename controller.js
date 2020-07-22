@@ -6,7 +6,8 @@ import * as presenter from './presenter.js';
 export async function updateTasks() { 
   let taskList = await model.getTaskList();
   let docList = model.getDocList;
-  await presenter.updateTasks(taskList, docList);
+  let taskInfo = model.getTaskInfo;
+  await presenter.updateTasks(taskList, docList, taskInfo);
 }
 
 export async function updateDocs(taskId) {
